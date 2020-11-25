@@ -1,0 +1,11 @@
+<div class="main">
+    {% for data in dataset %}
+    {{ data.date }}-
+    {{ data.content }}-
+    <a href="{% url 'update_view' data.id %}">up</a>
+    <a href="{% url 'delete_view' data.id %}">del</a>
+    
+    <br>
+    <hr>
+    {% endfor %}
+</div>

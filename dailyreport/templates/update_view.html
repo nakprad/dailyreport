@@ -1,0 +1,38 @@
+{% extends 'layout.html'%}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<div class="main">
+    <form method="POST" action="" class="uniForm">
+        {% csrf_token %}
+        <!-- {{ form|crispy }} -->
+
+        <div class="form-group">
+            <div class='input-group date' id='datetimepicker1'>
+            {{ form.date|as_crispy_field}}
+            <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker1').datetimepicker();
+            });
+        </script>
+
+        {{ form.content|as_crispy_field}}
+
+        <input type="submit" value="Update">
+    </form>
+</div>
+<script>
+    $(function () {
+      $("#datetimepicker1").datetimepicker({
+        format: 'DD/MM/YYYY HH:mm',
+      });
+    });
+  </script>
+
+{% endblock %} 

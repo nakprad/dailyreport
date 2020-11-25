@@ -1,0 +1,11 @@
+{% extends 'layout.html'%}
+
+{% block content %}
+<div class="main">
+    <p>you have been logged out</p>
+    <hr>
+    <small class="text-muted">
+        <a href="{% url 'login' %}">login</a>
+    </small>
+</div>
+{% endblock %} 

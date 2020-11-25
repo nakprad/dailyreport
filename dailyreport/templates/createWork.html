@@ -1,0 +1,14 @@
+{% extends 'layout.html'%}
+{% block content %}
+
+<form action="" method="POST">
+    {% csrf_token %}
+    <div class="fieldWrapper">
+        {{ form.subject.errors }}
+        {{ form.subject.label_tag }}
+        {{ form.subject }}
+    </div>
+    <input type="submit" name="submit">
+</form>
+
+{% endblock %}

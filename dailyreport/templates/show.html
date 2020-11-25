@@ -1,0 +1,16 @@
+{% extends 'layout.html'%}
+
+{% block content %}
+{% for data in datas %}
+
+<dl class="row">
+    <dt class="col-2">{{ data.date }} {{ data.id }} </dt>
+    <dd class="col-8">{{ data.content }} </dd>
+    <dd class="col-2"><a href="{% url 'update_view' data.id %}" class="btn btn-sm btn-warning" name="update">Update</a> 
+                      <a href="{% url 'delete_view' data.id %}" class="btn btn-sm btn-danger" name="delete">Delete</a> </dd>
+</dl>
+<hr>
+
+{% endfor %}
+
+{% endblock %}

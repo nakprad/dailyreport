@@ -1,0 +1,26 @@
+{% extends 'layout.html'%}
+
+
+{% block content %}
+<form method="POST" action="">
+  {% csrf_token %}
+  <!-- {{ form.as_p }} -->
+  {% for data in datas %} 
+  <dl class="row">
+    <dt class="col-2">id</dt>
+    <dd class="col-2"><input type="text" class="form-control" name="id" value= "{{ data.id }}" readonly></dd>
+  </dl>
+  <dl class="row">
+    <dt class="col-2">Date</dt>
+    <dd class="col-4"><input type="date" class="form-control" name="date" value="{{ data.date }}"></dd>
+  </dl>
+  <dl class="row">
+    <dt class="col-2">Detail</dt>
+    <dd class="col-8"><textarea type="textarea" class="form-control" rows="10" name="content" value="">{{ data.content }}</textarea></dd>
+  </dl>
+  <input type="submit" class="btn btn-primary" value="Update">
+</form>
+
+
+{% endfor %}
+{% endblock %}
