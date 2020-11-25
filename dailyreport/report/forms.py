@@ -1,6 +1,6 @@
 # from django.forms import ModelForm
 from django import forms
-from .models import Work
+from .models import Work, Profile
 import datetime
 from bootstrap_datepicker_plus import DatePickerInput
 from functools import partial
@@ -23,3 +23,22 @@ class UserRegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username','email','password1','password2']
+
+class UserUpdateForm(forms.ModelForm):
+    email = forms.EmailField()
+    username = forms.TextInput
+    first_name = forms.TextInput
+    last_name = forms.TextInput
+    # last_name = forms.TextInput
+    # password1 = forms.PasswordInput()
+    # password2 = forms.PasswordInput()
+    
+    class Meta:
+        model = User
+        fields = ['first_name','last_name','username','email']
+
+class ProfileUpdateForm(forms.ModelForm):
+    
+    class Meta:
+        model = Profile
+        fields = ['image']
