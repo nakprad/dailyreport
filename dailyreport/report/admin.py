@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Work
 from .models import Profile
+from .models import PicWork
 
 # Register your models here.
 class DesignPostAdmin(admin.ModelAdmin):
@@ -11,3 +12,4 @@ class DesignPostAdmin(admin.ModelAdmin):
 
 admin.site.register(Work,DesignPostAdmin)
 admin.site.register(Profile)
+admin.site.register(PicWork)

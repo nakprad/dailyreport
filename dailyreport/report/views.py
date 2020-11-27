@@ -1,7 +1,8 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from django.http import HttpResponseRedirect
-from .models import Work
-from .forms import WorkForm, UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from .models import Work, PicWork
+from .forms import WorkForm, UserRegisterForm, UserUpdateForm, ProfileUpdateForm, PicWorkForm
+from django.forms import modelformset_factory
 import datetime
 from django.contrib import messages
 from django.contrib.auth import logout as django_logout
@@ -12,18 +13,46 @@ def index(request):
     return render(request,'index.html')
 
 def create(request):
-    allwork = Work.objects.all().order_by('-id')[:5] 
-    return render(request,'create.html',{'datas':allwork})
+    form = PicWorkForm(request.POST or None , request.FILES or None)
+    if request.method =='POST':
+
+        content = request.POST['detail']
+        date = datetime.datetime.now()
+        create_at = datetime.datetime.now()
+        update_at = datetime.datetime.now()
+        create = Work(content=content,date=date,create_at=create_at,update_at=update_at)
+        create.save()
+        obj = form.save()
+        obj.work = create
+        obj.save()
+
+
+        form = PicWorkForm(request.POST or None , request.FILES or None)
+    else:
+       pass
+    context={
+        'form':PicWorkForm(request.POST or None , request.FILES or None)
+    }
+    return render(request,'create.html',context)
 
 def addWork(request):
-    print("hello")
-    content = request.POST['detail']
-    date = datetime.datetime.now()
-    create_at = datetime.datetime.now()
-    update_at = datetime.datetime.now()
-    insert = Work(content=content,date=date,create_at=create_at,update_at=update_at)
-    insert.save()
+    print("create work")
+    if request.method == 'POST':
+        form = WorkForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    else:
+        form = WorkForm()
     return redirect(create)
+
+    #     content = request.POST['detail']
+    #     date = datetime.datetime.now()
+    #     create_at = datetime.datetime.now()
+    #     update_at = datetime.datetime.now()
+    #     insert = Work(content=content,date=date,create_at=create_at,update_at=update_at)
+    #     insert.save()
+    # return redirect(create)
       
 def show(request):
     allwork = Work.objects.all().order_by('-id')
@@ -91,8 +120,3 @@ def profile(request):
     }
     return render(request,'profile.html',context)
 
-
-############################# NOT USE #############################
-def update(request,wid):  #not use
-    allwork = Work.objects.filter(id=wid)
-    return render(request,'update.html',{'datas':allwork})

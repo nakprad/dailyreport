@@ -32,9 +32,15 @@ class Profile(models.Model):
             img.thumbnail(output_size)
             img.save(self.image.path)
 
-        # img = Image.open(self.image.path)
+class PicWork(models.Model):
+    work = models.ForeignKey(Work,related_name='picofwork', null=True,on_delete=models.CASCADE)
+    pic = models.ImageField(default='default.jpg',upload_to='work_pics')
 
-        # if img.height > 300 or img.width > 300 :
-        #     output_size = (300 , 300)
-        #     img.thumbnail(output_size)
-        #     img.save(self.image.path)
+    def save(self):
+        super().save()
+        
+        pic = Image.open(self.pic.path)
+        if pic.height > 500 or pic.width > 500 :
+            output_size = (500 , 500)
+            pic.thumbnail(output_size)
+            pic.save(self.pic.path)

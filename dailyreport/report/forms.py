@@ -1,6 +1,6 @@
 # from django.forms import ModelForm
 from django import forms
-from .models import Work, Profile
+from .models import Work, Profile, PicWork
 import datetime
 from bootstrap_datepicker_plus import DatePickerInput
 from functools import partial
@@ -12,10 +12,10 @@ DateInput = partial(forms.DateInput, {'class': 'datepicker'})
 class WorkForm(forms.ModelForm):
     content = forms.CharField(widget=forms.Textarea)
     date =  forms.DateField(widget=DateInput())
-
     class Meta:
         model = Work
-        fields = ["date","content","update_at"]
+        fields = ["date","content"]
+    
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -29,9 +29,6 @@ class UserUpdateForm(forms.ModelForm):
     username = forms.TextInput
     first_name = forms.TextInput
     last_name = forms.TextInput
-    # last_name = forms.TextInput
-    # password1 = forms.PasswordInput()
-    # password2 = forms.PasswordInput()
     
     class Meta:
         model = User
@@ -42,3 +39,10 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['image']
+
+class PicWorkForm(forms.ModelForm):
+
+    pic = forms.ImageField()
+    class Meta:
+        model = PicWork
+        fields = ['pic',]
