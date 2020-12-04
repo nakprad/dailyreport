@@ -1,11 +1,14 @@
 {% extends 'layout.html'%}
 
 {% block content %}
-{% for data in datas %}
 
+{% for data in picworks %}
 <dl class="row">
-    <dt class="col-2">{{ data.date }} {{ data.id }} </dt>
-    <dd class="col-8">{{ data.content }} </dd>
+  <dt class="col-2">{{ data.date }} </dt>
+  <dt class="col-1">id = {{ data.id }} </dt>
+  <!-- <dd class="col-4">content = {{ data.content }} </dd> -->
+    <dd class="col-2">pic={{ data.work.content }} xx<br></dd>
+
     <dd class="col-2"><a href="{% url 'update_view' data.id %}" class="btn btn-sm btn-warning" name="update">Update</a> 
                       <a href="{% url 'delete_view' data.id %}" class="btn btn-sm btn-danger" name="delete">Delete</a> </dd>
 </dl>
@@ -14,3 +17,12 @@
 {% endfor %}
 
 {% endblock %}
+
+return render_to_response('mytemplate.html', { 'mydoc' : doc, 'mydocimage' : img }
+
+
+{% for doc in result %}
+  {% for docimage in doc.images.all %}
+    {{ docimage.image.url }}
+  {% endfor %}
+{% endfor %}

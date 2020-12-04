@@ -1,22 +1,40 @@
 {% extends 'layout.html'%}
 {% load crispy_forms_tags %}
 
-
 {% block content %}
 <div class="main">
     <form method="POST" action="" enctype="multipart/form-data">
         {% csrf_token %}
-        <div class="form-group">
-            <label>Example textarea</label>
-            <textarea class="form-control" name="detail" rows="3"></textarea>
+
+        {{ work_form|crispy }}
+        <div class="row">
+            <div class="col-10">
+                {{ pic_form|crispy }}
+            </div>
+            <div class="col-2">
+            <input type="submit" value="Submit" class="btn btn-primary btn-block">
+            </div>  
+        </div>
+        
+        <!-- <div class="form-group">
+            <center><H1 class="text-monospace"><label>TODAY WORK</label></H1></center>
+            <textarea class="form-control" name="detail" rows="3" placeholder="What's happenning today?"></textarea>
         </div>
         <div class="form-group">
-            <!-- <input type="file" class="form-control-file" name="picwork" onchange="readURL(this);">
-            <img id="picwork"/> -->
-            {{ form|crispy }}
+            {{ pic_form|crispy }}
         </div>
-        <input type="submit" value="Add Today Work">
+        <input type="submit" value="Submit" class="btn btn-primary btn-lg"> -->
+        
+        <!-- <input type="file" class="form-control-file" name="picpath" onchange="readURL(this);"> <img id="picpath"/> -->               
     </form>
+    <hr>
+</div>
+<div>
+    {% for i in allwork %}
+    {{ i.date }}
+    {{ i.content }}
+    <hr>
+    {% endfor %}
 </div>
 <script>
 function readURL(input) {
@@ -24,9 +42,9 @@ function readURL(input) {
         var reader = new FileReader();
 
         reader.onload = function (e) {
-            $('#picwork')
+            $('#picpath')
                 .attr('src', e.target.result)
-                .width(150)
+                .width(200)
                 .height(200);
         };
 
@@ -35,4 +53,6 @@ function readURL(input) {
 }
 
 </script>
+
+
 {% endblock %} 

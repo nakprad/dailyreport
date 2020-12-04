@@ -21,13 +21,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.index),
     path('create',views.create,name='create'),
-    path('addWork',views.addWork),
     path('show',views.show),
-    # path('update/<int:wid>/',views.update),
     path('update_view/<int:wid>/',views.update_view,name='update_view'),
     path('delete_view/<int:wid>/',views.delete_view, name='delete_view'),
     path('register',views.register, name='register'),

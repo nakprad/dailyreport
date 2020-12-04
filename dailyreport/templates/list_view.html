@@ -1,11 +1,16 @@
-<div class="main">
-    {% for data in dataset %}
-    {{ data.date }}-
-    {{ data.content }}-
-    <a href="{% url 'update_view' data.id %}">up</a>
-    <a href="{% url 'delete_view' data.id %}">del</a>
-    
-    <br>
-    <hr>
+{% extends "layout.html" %}
+
+{% block content %}
+  <h1>Book List</h1>
+  {% if Work_list %}
+  <ul>
+    {% for Work in Work_list %}
+      <li>
+        <a href="{{ Work.get_absolute_url }}">{{ Work.data }}</a> ({{Work.content}})
+      </li>
     {% endfor %}
-</div>
+  </ul>
+  {% else %}
+    <p>There are no books in the library.</p>
+  {% endif %}       
+{% endblock %}

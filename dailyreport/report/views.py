@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from .models import Work, PicWork
 from .forms import WorkForm, UserRegisterForm, UserUpdateForm, ProfileUpdateForm, PicWorkForm
 from django.forms import modelformset_factory
@@ -7,57 +7,56 @@ import datetime
 from django.contrib import messages
 from django.contrib.auth import logout as django_logout
 from django.contrib.auth.models import User,auth
+from django.contrib.auth.decorators import login_required
+from PIL import Image
+from django.views.generic import ListView
 
 # Create your views here.
+@login_required(login_url='login')
 def index(request):
     return render(request,'index.html')
 
+@login_required(login_url='login')
 def create(request):
-    form = PicWorkForm(request.POST or None , request.FILES or None)
-    if request.method =='POST':
-
-        content = request.POST['detail']
-        date = datetime.datetime.now()
-        create_at = datetime.datetime.now()
-        update_at = datetime.datetime.now()
-        create = Work(content=content,date=date,create_at=create_at,update_at=update_at)
-        create.save()
-        obj = form.save()
-        obj.work = create
-        obj.save()
-
-
-        form = PicWorkForm(request.POST or None , request.FILES or None)
-    else:
-       pass
     context={
-        'form':PicWorkForm(request.POST or None , request.FILES or None)
+        'work_form' : WorkForm(),
+        'pic_form' : PicWorkForm(request.POST,request.FILES),
+        'allwork': Work.objects.all().order_by('-id')[:5]
+
     }
+    if request.method == 'POST':
+        work_form = WorkForm(request.POST)
+        work_form.save()    
+        workid = work_form.save()
+        pic_form = PicWorkForm(request.POST,request.FILES)
+        print(workid.id ,  workid.content,pic_form)
+
+    if request.method == 'POST' and pic_form.is_valid():
+        obj = pic_form.save(commit=False)
+        obj2 = PicWork(pic=obj.pic, work=workid)
+        if obj2.pic !='':
+            obj2.save()
+         
+    else:
+        return render(request,'create.html',context)
+
     return render(request,'create.html',context)
 
-def addWork(request):
-    print("create work")
-    if request.method == 'POST':
-        form = WorkForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('/')
-    else:
-        form = WorkForm()
-    return redirect(create)
 
-    #     content = request.POST['detail']
-    #     date = datetime.datetime.now()
-    #     create_at = datetime.datetime.now()
-    #     update_at = datetime.datetime.now()
-    #     insert = Work(content=content,date=date,create_at=create_at,update_at=update_at)
-    #     insert.save()
-    # return redirect(create)
-      
+@login_required(login_url='login')
 def show(request):
-    allwork = Work.objects.all().order_by('-id')
-    return render(request,'show.html',{'datas':allwork})
 
+    picworks = PicWork.objects.all().select_related('work')
+    # picworks = PicWork.objects.all()
+    for pw in picworks:
+        print(pw.id,pw.pic,pw.work.content)    
+    work = Work.objects.all().order_by('-id')
+
+    # # context={'pic':pic,'content':content}
+    context={'picworks':picworks,'pw':pw,'work':work}
+    return render(request,'show.html',context,)
+   
+@login_required(login_url='login')
 def update_view(request,wid):
     
     instance = get_object_or_404(Work, id=wid)
@@ -68,8 +67,6 @@ def update_view(request,wid):
         instance.save()
         return redirect(show)
     print(wid)
-
-    # now = datetime.date.today()
     context = {
         "data": instance.date,
         "content": instance.content,
@@ -79,11 +76,13 @@ def update_view(request,wid):
     print(instance.update_at)
     return render(request,"update_view.html",context)
 
+@login_required(login_url='login')
 def delete_view(request,wid):
     work = Work.objects.get(id=wid)
     work.delete()
     return render(request,"index.html")
-
+    
+@login_required(login_url='login')
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -96,10 +95,12 @@ def register(request):
         form = UserRegisterForm()
     return render(request,'register.html',{'form':form})
 
+@login_required(login_url='login')
 def logout(request):
     django_logout(request)
     return redirect("login")
 
+@login_required(login_url='login')
 def profile(request):
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance = request.user)

@@ -33,14 +33,21 @@ class Profile(models.Model):
             img.save(self.image.path)
 
 class PicWork(models.Model):
-    work = models.ForeignKey(Work,related_name='picofwork', null=True,on_delete=models.CASCADE)
-    pic = models.ImageField(default='default.jpg',upload_to='work_pics')
+    work = models.ForeignKey(Work,related_name='picofwork',on_delete=models.CASCADE)
+    pic = models.ImageField(upload_to='work_pics')
 
-    def save(self):
-        super().save()
-        
-        pic = Image.open(self.pic.path)
-        if pic.height > 500 or pic.width > 500 :
-            output_size = (500 , 500)
-            pic.thumbnail(output_size)
-            pic.save(self.pic.path)
+    def __str__(self):
+        return self.pic
+
+    # def save(self):
+    #     pic = Image.open(self.pic.path)
+
+    #     if pic.is_valid == '':
+    #         pass
+    #     else:
+    #         # super().save()
+    #         # pic.height > 500 or pic.width > 500 
+    #         output_size = (500 , 500)
+    #         pic.thumbnail(output_size)
+    #         pic.save(self.pic.path)
+    
